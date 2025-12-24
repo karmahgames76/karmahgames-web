@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horse Game - Puzzle del Caballo de Ajedrez | KARMAH Games</title>
+    <meta name="description" content="Ordena los números con el movimiento del caballo de ajedrez. Torneos semanales, ranking global y desafíos diarios. ¡Descarga gratis!">
+    <meta name="keywords" content="puzzle, caballo, ajedrez, juego móvil, Android, torneos">
+    <meta property="og:title" content="Horse Game - Puzzle del Caballo de Ajedrez">
+    <meta property="og:description" content="Ordena los números con el movimiento del caballo de ajedrez. ¡Torneos semanales!">
+    <meta property="og:image" content="images/feature_graphic.png">
+    <meta property="og:url" content="https://www.karmahgames.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wood-dark: #3d2314;
+            --wood-medium: #5c3d2e;
+            --wood-light: #8b6914;
+            --gold: #d4a853;
+            --gold-bright: #ffd700;
+            --cream: #f5e6c8;
+            --text-light: #fff;
+            --text-dark: #2c1810;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--wood-dark);
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        /* Wood texture background */
+        .wood-bg {
+            background: 
+                linear-gradient(90deg, rgba(61,35,20,0.9) 0%, rgba(92,61,46,0.8) 50%, rgba(61,35,20,0.9) 100%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.1) 2px,
+                    rgba(0,0,0,0.1) 4px
+                );
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(180deg, rgba(61,35,20,0.95) 0%, transparent 100%);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        nav a {
+            color: var(--cream);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 400;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            background: 
+                radial-gradient(ellipse at center, rgba(212,168,83,0.15) 0%, transparent 70%),
+                linear-gradient(180deg, var(--wood-dark) 0%, var(--wood-medium) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(212,168,83,0.03) 40px,
+                    rgba(212,168,83,0.03) 80px
+                );
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-icon {
+            width: 180px;
+            height: 180px;
+            border-radius: 36px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 0 4px var(--gold),
+                inset 0 0 30px rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--cream);
+            margin-bottom: 15px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: rgba(245,230,200,0.8);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+            color: var(--text-dark);
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(212,168,83,0.4),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 40px rgba(212,168,83,0.5),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+        }
+
+        .cta-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            background: var(--wood-medium);
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, var(--wood-dark) 0%, transparent 100%);
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 60px;
+            letter-spacing: 4px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 20px auto 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(61,35,20,0.8) 0%, rgba(92,61,46,0.6) 100%);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(212,168,83,0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,168,83,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .feature-card p {
+            color: rgba(245,230,200,0.8);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: 100px 20px;
+            background: var(--wood-dark);
+        }
+
+        .screenshots-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .screenshots-scroll {
+            display: flex;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .screenshot {
+            flex: 0 0 auto;
+            width: 280px;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.5),
+                0 0 0 3px rgba(212,168,83,0.3);
+            transition: all 0.4s ease;
+        }
+
+        .screenshot:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.6),
+                0 0 0 3px var(--gold);
+        }
+
+        /* Tournaments Section */
+        .tournaments {
+            padding: 100px 20px;
+            background: 
+                radial-gradient(ellipse at top, rgba(212,168,83,0.1) 0%, transparent 50%),
+                var(--wood-medium);
+        }
+
+        .tournament-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .tournament-text h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .tournament-text p {
+            color: rgba(245,230,200,0.9);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .tournament-categories {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .category-badge {
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .category-bronze {
+            background: linear-gradient(135deg, #cd7f32, #8b4513);
+            color: white;
+        }
+
+        .category-silver {
+            background: linear-gradient(135deg, #c0c0c0, #808080);
+            color: var(--text-dark);
+        }
+
+        .category-gold {
+            background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+            color: var(--text-dark);
+        }
+
+        .tournament-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .trophy-img {
+            max-width: 300px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)) drop-shadow(0 0 20px rgba(212,168,83,0.3)); }
+            50% { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)) drop-shadow(0 0 40px rgba(212,168,83,0.6)); }
+        }
+
+        /* Download Section */
+        .download {
+            padding: 100px 20px;
+            background: var(--wood-dark);
+            text-align: center;
+        }
+
+        .download-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .download h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .download p {
+            color: rgba(245,230,200,0.8);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .store-badge {
+            height: 60px;
+            transition: transform 0.3s ease;
+        }
+
+        .store-badge:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 20px 30px;
+            background: #1a0f0a;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(245,230,200,0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .copyright {
+            color: rgba(245,230,200,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-icon {
+                width: 140px;
+                height: 140px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .tournament-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .tournament-categories {
+                justify-content: center;
+            }
+
+            .footer-links {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">KARMAH GAMES</a>
+        <nav>
+            <a href="#features">Características</a>
+            <a href="#screenshots">Capturas</a>
+            <a href="#tournaments">Torneos</a>
+            <a href="#download">Descargar</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <img src="images/icon_512x512.png" alt="Horse Game Icon" class="hero-icon">
+            <h1>HORSE GAME</h1>
+            <p class="hero-subtitle">El Puzzle del Caballo de Ajedrez</p>
+            <p class="hero-description">
+                Ordena los números intercambiando fichas con el movimiento en "L" del caballo. 
+                Compite en torneos semanales, sube en el ranking global y demuestra tu estrategia.
+            </p>
+            <a href="#download" class="cta-button">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.523 2H6.477C5.768 2 5.5 2.768 5.5 3.477v17.046c0 .709.768.977 1.477.977h11.046c.709 0 .977-.768.977-1.477V3.477C19 2.268 18.232 2 17.523 2zM12 20.5c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm4.5-4.5h-9V4h9v12z"/>
+                </svg>
+                Descargar Gratis
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Características</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">🎮</span>
+                <h3>65 Niveles</h3>
+                <p>Niveles únicos con dificultad progresiva. Incluye niveles secretos y legendarios con tableros de formas especiales.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🏆</span>
+                <h3>Torneos Semanales</h3>
+                <p>Compite contra jugadores de todo el mundo en tres categorías: Bronce, Plata y Oro. Gana premios y trofeos.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📊</span>
+                <h3>Ranking Global</h3>
+                <p>Sube posiciones en el ranking mundial. Demuestra que eres el mejor resolviendo puzzles.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📅</span>
+                <h3>Retos Diarios</h3>
+                <p>Cada día un nuevo desafío. Mantén tu racha y gana recompensas exclusivas.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🥇</span>
+                <h3>Sistema de Medallas</h3>
+                <p>Consigue medallas de Oro, Plata y Bronce según tu rendimiento en cada nivel.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🧠</span>
+                <h3>Entrena tu Mente</h3>
+                <p>Mejora tu pensamiento estratégico y visión espacial mientras te diviertes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <h2 class="section-title">Capturas de Pantalla</h2>
+        <div class="screenshots-container">
+            <div class="screenshots-scroll">
+                <img src="images/screenshot_1.png" alt="Menú principal" class="screenshot">
+                <img src="images/screenshot_2.png" alt="Partida en curso" class="screenshot">
+                <img src="images/screenshot_3.png" alt="Ranking global" class="screenshot">
+                <img src="images/screenshot_4.png" alt="Torneos" class="screenshot">
+                <img src="images/screenshot_5.png" alt="Progreso" class="screenshot">
+                <img src="images/screenshot_6.png" alt="Perfil de jugador" class="screenshot">
+            </div>
+        </div>
+    </section>
+
+    <!-- Tournaments Section -->
+    <section class="tournaments" id="tournaments">
+        <h2 class="section-title">Torneos Semanales</h2>
+        <div class="tournament-content">
+            <div class="tournament-text">
+                <h3>Compite por la Gloria</h3>
+                <p>
+                    Cada semana se abre un nuevo torneo con tres categorías de dificultad. 
+                    Resuelve el puzzle en el menor número de movimientos y tiempo para subir al podio.
+                </p>
+                <p>
+                    Los ganadores reciben monedas, puntos de ranking y la posibilidad de entrar 
+                    en el prestigioso Salón de la Fama.
+                </p>
+                <div class="tournament-categories">
+                    <span class="category-badge category-bronze">Bronce</span>
+                    <span class="category-badge category-silver">Plata</span>
+                    <span class="category-badge category-gold">Oro</span>
+                </div>
+            </div>
+            <div class="tournament-image">
+                <img src="images/trophy.png" alt="Trofeo de Oro" class="trophy-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="download-content">
+            <h2>¡Descarga Ahora!</h2>
+            <p>Disponible gratis en Google Play Store. ¡Empieza a ordenar!</p>
+            <a href="https://play.google.com/store/apps/details?id=com.karmahgames.horsegame" target="_blank">
+                <img src="https://play.google.com/intl/en_us/badges/static/images/badges/es_badge_web_generic.png" alt="Disponible en Google Play" class="store-badge">
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">KARMAH GAMES</div>
+        <div class="footer-links">
+            <a href="privacy-policy.html">Política de Privacidad</a>
+            <a href="mailto:contact@karmahgames.com">Contacto</a>
+        </div>
+        <p class="copyright">© 2024 KARMAH Games. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
